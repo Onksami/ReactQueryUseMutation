@@ -36,7 +36,7 @@ function App() {
 console.log("mutation data", data);
 
 if (isLoading) {
-  return <div> Loading ...</div>
+  return <div> Loading ....</div>
 }
 
 
