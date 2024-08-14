@@ -1,45 +1,52 @@
 
-import { useQuery } from 'react-query'
+
+import { useMutation } from 'react-query'
 import './App.css'
 
-//useQuery is just pulling data (get request)
+
 //useMutation is adding, upgrading, changing data (post, delete, push)
+
+// when we want to create something, we need to some parameters for the function. (ex: newPost)
+
+// mutate and reset functions are coming with useMutation
 
 function App() {
 
-  // useQuery has 3 parameters. whenever the first parameters changes, the function(second parameter) works.
 
-  // enabled property is stopping the data getting when the component mount.
-
-  //https://jsonplaceholder.org/posts
-
-  const fetchData = useQuery(["posts"], () => {
-    return fetch("https://jsonplaceholder.org/posts").then(response => response.json());
-  }, {
-    enabled: false
-  } )
-
-  const {data, isLoading, refetch} = fetchData
+  //https://jsonplaceholder.org/users
 
 
-  console.log( "fetchData", data, isLoading);
 
-  if (isLoading) {
-    return <div>Loading...</div>  }
+  const {data, reset, mutate, isLoading} = useMutation(["users"], (newPost) => {
+
+    return fetch("https://jsonplaceholder.org/users",  
+      {
+        method: "POST",
+        body: JSON.stringify(newPost),
+        headers: {
+          "Content-type" : "application/json; charset=UTF-8"
+        }
+      }
+    ).then(response => response.json())
+
+  })
+
+
+
+console.log("mutation data", data);
+
+if (isLoading) {
+  return <div> Loading ...</div>
+}
 
 
   
 
   return (
   <div>
-    <button onClick={() => refetch()}> Get Data </button>
-    <div>
-      {
-        data && data.map((dt,i) => (
-          <div key={i}>{dt.title}</div>
-        ))
-      }
-    </div>
+  <button onClick={() => mutate({title:"Deneme", body:"deneme-body", userId: 1})}> Add Data</button>
+  <button onClick={() => reset()}> Reset Data</button>
+ 
   </div>
   )
 }
